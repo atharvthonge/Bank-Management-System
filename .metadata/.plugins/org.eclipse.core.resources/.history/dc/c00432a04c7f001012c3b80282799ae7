@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SecureNet Bank - Login</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e3f2fd; /* soft light blue */
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 30px;
+        }
+
+        .login-box {
+            background-color: #ffffff; /* keeps login box white for clarity */
+            width: 320px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #1565c0; /* matching blue tone */
+        }
+
+        .login-box label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #0d47a1;
+            font-size: 14px;
+        }
+
+        .login-box input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 18px;
+            border: 1px solid #90caf9; /* soft blue border */
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #42a5f5, #64b5f6);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .login-box button:hover {
+            opacity: 0.9;
+        }
+
+        .login-box p.error {
+            color: #e53935;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .info-box {
+            background-color: #bbdefb; /* soft complementary blue */
+            padding: 20px;
+            width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+            color: #0d47a1; /* dark blue text */
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .info-box h3 {
+            margin-top: 0;
+        }
+
+        .info-box ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h2>SecureNet Bank</h2>
+            <form th:action="@{/login}" method="post">
+                <label>Account Number</label>
+                <input type="text" name="accNo" placeholder="Enter 12-digit account number" required>
+
+                <label>Name</label>
+                <input type="text" name="name" placeholder="Enter your name" required>
+
+                <button type="submit">Login</button>
+            </form>
+            <p class="error" th:text="${error}"></p>
+        </div>
+
+        <div class="info-box">
+            <h3>Important Info:</h3>
+            <ul>
+                <li>Never share your credentials like OTP or PIN with anyone.</li>
+                <li>Our bank never asks for your password or mobile number.</li>
+                <li>Be alert against phishing calls or emails pretending to be bank officials.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

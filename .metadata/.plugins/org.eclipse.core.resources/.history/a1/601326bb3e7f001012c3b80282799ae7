@@ -1,0 +1,55 @@
+package com.securenetbank.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.securenetbank.model.Account;
+import com.securenetbank.model.Transaction;
+import com.securenetbank.repository.TransactionRepository;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+@Service
+public class AccountService {
+
+    private Map<String, Account> accounts = new HashMap<>(); // still keep in-memory accounts if you want
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    public AccountService() {
+        accounts.put("1001", new Account("1001", "Atharv", 50000));
+        accounts.put("1002", new Account("1002", "Rahul", 30000));
+    }
+
+    public Account getAccount(String accNo) {
+        return accounts.get(accNo);
+    }
+
+    public boolean transfer(String fromAcc, String toAcc, double amount) {
+        Account sender = accounts.get(fromAcc);
+        Account receiver = accounts.get(toAcc);
+
+        if (sender == null || receiver == null) return false;
+        if (sender.getBalance() < amount) return false;
+
+        // Deduct & Add
+        sender.setBalance(sender.getBalance() - amount);
+        receiver.setBalance(receiver.getBalance() + amount);
+
+        // Save transaction in database
+        Transaction t = new Transaction(fromAcc, sender.getHolderName(), toAcc, receiver.getHolderName(), amount, LocalDateTime.now());
+        transactionRepository.save(t);
+
+        return true;
+    }
+
+    public List<Transaction> getTransactionsForUser(String accNo) {
+        // fetch from database
+        return transactionRepository.findByFromAccountOrToAccount(accNo, accNo);
+    }
+
+    public Map<String, Account> getAllAccounts() {
+        return accounts;
+    }
+}

@@ -1,0 +1,67 @@
+package com.securenetbank.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.securenetbank.model.Account;
+import com.securenetbank.model.Transaction;
+import com.securenetbank.repository.AccountRepository;
+import com.securenetbank.repository.TransactionRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class AccountService {
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    // Transfer money
+    public boolean transfer(String fromAcc, String toAcc, double amount) {
+        Optional<Account> senderOpt = accountRepository.findById(fromAcc);
+        Optional<Account> receiverOpt = accountRepository.findById(toAcc);
+
+        if (senderOpt.isEmpty() || receiverOpt.isEmpty()) return false;
+
+        Account sender = senderOpt.get();
+        Account receiver = receiverOpt.get();
+
+        if (sender.getBalance() < amount) return false;
+
+        sender.setBalance(sender.getBalance() - amount);
+        receiver.setBalance(receiver.getBalance() + amount);
+
+        accountRepository.save(sender);
+        accountRepository.save(receiver);
+
+        // Save transaction
+        Transaction t = new Transaction(fromAcc, sender.getHolderName(), toAcc, receiver.getHolderName(), amount, LocalDateTime.now());
+        transactionRepository.save(t);
+
+        return true;
+    }
+
+    // Get account by number
+    public Account getAccount(String accNo) {
+        return accountRepository.findById(accNo).orElse(null);
+    }
+
+    // Get transactions for a user
+ // Get transactions for a user
+    public List<Transaction> getTransactionsForUser(String accountNumber) {
+        return transactionRepository.findAll().stream()
+                .filter(tx -> tx.getFromAccount().equals(accountNumber)
+                           || tx.getToAccount().equals(accountNumber))
+                .toList();  // or collect(Collectors.toList())
+    }
+
+
+    // Get all accounts
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
+    }
+}

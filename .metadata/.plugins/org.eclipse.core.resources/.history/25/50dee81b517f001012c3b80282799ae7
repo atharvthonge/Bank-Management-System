@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Accounts</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fdf6e3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: #ffffff;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff9e00;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #ffe0b2;
+        }
+
+        .balance {
+            cursor: pointer;
+            font-weight: bold;
+            transition: filter 0.2s ease;
+            filter: blur(5px); /* blur by default */
+        }
+
+        .balance.visible {
+            filter: blur(0); /* reveal on click */
+        }
+
+        a.button-link {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 5px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(to right, #ff6b00, #ff9e00);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+
+        a.button-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+        }
+
+        .links-container {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1 th:text="${title}">Accounts</h1>
+
+    <table>
+        <tr>
+            <th>Account No</th>
+            <th>Holder Name</th>
+            <th>Balance</th>
+        </tr>
+        <tr th:each="acc : ${accounts}">
+            <td th:text="${acc.accountNumber}"></td>
+            <td th:text="${acc.holderName}"></td>
+            <td class="balance" th:text="${acc.balance}" onclick="toggleBalance(this)"></td>
+        </tr>
+    </table>
+
+    <div class="links-container">
+        <a th:href="@{/transfer}" class="button-link">Transfer Money</a>
+        <a th:href="@{/transactions}" class="button-link">Transaction History</a>
+        <a th:href="@{/logout}" class="button-link">Logout</a>
+    </div>
+
+    <script>
+        function toggleBalance(td) {
+            td.classList.toggle('visible');
+        }
+    </script>
+</body>
+</html>

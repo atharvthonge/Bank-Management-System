@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Bank App</title>
+</head>
+<body>
+    <h1 th:text="${title}">Welcome</h1>
+    <p>This is the SecureNet Bank homepage.</p>
+
+    <a href="/accounts">View Accounts</a> |
+    <a href="/transactions">View Transactions</a>
+</body>
+</html>

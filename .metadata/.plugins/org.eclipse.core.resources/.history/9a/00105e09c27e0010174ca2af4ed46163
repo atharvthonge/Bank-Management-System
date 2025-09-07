@@ -1,0 +1,16 @@
+<h2>Account Balances</h2>
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Account No</th>
+        <th>Holder Name</th>
+        <th>Balance</th>
+    </tr>
+    <tr th:each="acc : ${accounts}">
+        <td th:text="${acc.accountNumber}"></td>
+        <td th:text="${acc.holderName}"></td>
+        <td th:text="${acc.balance}"></td>
+    </tr>
+</table>
+
+<br>
+<a href="/transfer">Send Money</a>

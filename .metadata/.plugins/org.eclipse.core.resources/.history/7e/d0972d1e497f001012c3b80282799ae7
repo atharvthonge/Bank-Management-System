@@ -1,0 +1,71 @@
+package com.securenetbank.service;
+
+import com.securenetbank.model.Account;
+import com.securenetbank.model.Transaction;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class AccountService {
+
+    private List<Account> accounts = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
+
+    public AccountService() {
+        // Example accounts
+        accounts.add(new Account("123456789012", "Alice", 5000));
+        accounts.add(new Account("987654321098", "Bob", 3000));
+
+        // Example transactions
+        transactions.add(new Transaction(
+                "123456789012", "Alice",
+                "987654321098", "Bob",
+                100, LocalDateTime.now()
+        ));
+    }
+
+    // Get account by account number
+    public Account getAccount(String accNo) {
+        return accounts.stream()
+                .filter(acc -> acc.getAccountNumber().equals(accNo))
+                .findFirst().orElse(null);
+    }
+
+    // Get all accounts
+    public List<Account> getAllAccounts() {
+        return accounts;
+    }
+
+    // Transfer money
+    public boolean transfer(String fromAcc, String toAcc, double amount) {
+        Account sender = getAccount(fromAcc);
+        Account receiver = getAccount(toAcc);
+
+        if (sender == null || receiver == null) return false;
+        if (sender.getBalance() < amount) return false;
+
+        sender.setBalance(sender.getBalance() - amount);
+        receiver.setBalance(receiver.getBalance() + amount);
+
+        // Add transaction
+        transactions.add(new Transaction(
+                fromAcc, sender.getHolderName(),
+                toAcc, receiver.getHolderName(),
+                amount, LocalDateTime.now()
+        ));
+        return true;
+    }
+
+    // **Fix here: always return a list, never null**
+    public List<Transaction> getTransactionsForUser(String accountNumber) {
+        if (transactions == null) transactions = new ArrayList<>();
+        return transactions.stream()
+                .filter(tx -> tx.getFromAccount().equals(accountNumber)
+                           || tx.getToAccount().equals(accountNumber))
+                .collect(Collectors.toList());
+    }
+}
